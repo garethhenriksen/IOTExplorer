@@ -11,6 +11,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.jms.Queue;
@@ -19,6 +20,7 @@ import java.util.Date;
 
 @Slf4j
 @RestController
+@Validated
 @RequestMapping("/")
 public class IOTController {
 
@@ -46,7 +48,6 @@ public class IOTController {
         try {
             log.info("message" + URLDecoder.decode(message, "UTF-8"));
             final String decodedMessage = URLDecoder.decode(message, "UTF-8");
-//            kafkaTemplate.send(TOPIC, URLDecoder.decode(message, "UTF-8"));
             ListenableFuture<SendResult<String, String>> future =
                     kafkaTemplate.send(TOPIC, decodedMessage);
 
@@ -57,6 +58,7 @@ public class IOTController {
                     System.out.println("Sent message=[" + decodedMessage +
                             "] with offset=[" + result.getRecordMetadata().offset() + "]");
                 }
+
                 @Override
                 public void onFailure(Throwable ex) {
                     System.out.println("Unable to send message=["
@@ -71,7 +73,7 @@ public class IOTController {
     }
 
     @CrossOrigin(origins = {"http://localhost:3000"})
-    @PostMapping(value = "/publish")
+    @PostMapping(value = "/publish/activemq")
     public String publishJMSMessage(@RequestBody(required = false) final String message) {
         try {
             log.info("message" + URLDecoder.decode(message, "UTF-8"));
@@ -85,21 +87,14 @@ public class IOTController {
 
     @CrossOrigin(origins = {"http://localhost:3000"})
     @GetMapping(value = "/messages")
-    public IOTMessageDTO test(@RequestParam(name = "deviceTypeId", required = false) String deviceTypeId,
-                              @RequestParam(name = "deviceId", required = false) String deviceId,
-                              @RequestParam(name = "groupId", required = false) String groupId,
-                              @RequestParam(name = "query", required = false) String query,
-                              @RequestParam(name = "startDate", required = false)
-                       @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date startDate,
-                              @RequestParam(name = "endDate", required = false)
-                       @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endDate) {
-
-        log.info("deviceTypeId" + deviceTypeId + "\n" +
-                "deviceId" + deviceId + "\n" +
-                "groupId" + groupId + "\n" +
-                "query" + query + "\n" +
-                "startDate" + startDate + "\n" +
-                "endDate" + endDate + "\n");
+    public IOTMessageDTO getMessages(@RequestParam(name = "deviceTypeId", required = false) Integer deviceTypeId,
+                                     @RequestParam(name = "deviceId", required = false) Integer deviceId,
+                                     @RequestParam(name = "groupId", required = false) Integer groupId,
+                                     @RequestParam(name = "query", required = false) String query,
+                                     @RequestParam(name = "startDate", required = false)
+                                     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date startDate,
+                                     @RequestParam(name = "endDate", required = false)
+                                     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endDate) {
         return iotService.getMessagesWithParameters(deviceTypeId, deviceId, groupId, query, startDate, endDate);
     }
 }

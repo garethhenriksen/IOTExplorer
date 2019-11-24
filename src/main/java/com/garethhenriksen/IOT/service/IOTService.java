@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
-import java.util.List;
 
 @Repository
 public class IOTService {
@@ -24,16 +23,8 @@ public class IOTService {
         return iotDao.insertMessage(message);
     }
 
-    public List<IOTMessage> getMessages() {
-        return iotDao.getMessages();
-    }
-
-    public IOTMessageDTO getMessagesWithParameters(String deviceTypeId, String deviceId, String groupId, String query,
+    public IOTMessageDTO getMessagesWithParameters(Integer deviceTypeId, Integer deviceId, Integer groupId, String query,
                                                    Date startDate, Date endDate) {
         return iotDao.getMessages(deviceTypeId, deviceId, groupId, query, startDate, endDate);
-    }
-
-    public Double getMessagesWithParameter(String query) {
-        return iotDao.getValue(query);
     }
 }

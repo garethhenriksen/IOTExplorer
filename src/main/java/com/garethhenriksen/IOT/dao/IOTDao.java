@@ -4,7 +4,6 @@ import com.garethhenriksen.IOT.model.IOTMessage;
 import com.garethhenriksen.IOT.model.IOTMessageDTO;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 public interface IOTDao {
@@ -15,10 +14,6 @@ public interface IOTDao {
         return insertMessage(id, message);
     }
 
-    List<IOTMessage> getMessages();
-
-    IOTMessageDTO getMessages(String deviceTypeId, String deviceId, String groupId, String query,
+    IOTMessageDTO getMessages(Integer deviceTypeId, Integer deviceId, Integer groupId, String query,
                               Date startDate, Date endDate);
-
-    Double getValue(String query);
 }

@@ -30,14 +30,7 @@ public class PostgresIOTDataAccessService implements IOTDao {
     }
 
     @Override
-    public List<IOTMessage> getMessages() {
-        final String sql = "SELECT deviceId, deviceTypeId, groupId, value, timestamp FROM IOT_Message";
-
-        return null;
-    }
-
-    @Override
-    public IOTMessageDTO getMessages(String deviceTypeId, String deviceId, String groupId, String query, Date startDate, Date endDate) {
+    public IOTMessageDTO getMessages(Integer deviceTypeId, Integer deviceId, Integer groupId, String query, Date startDate, Date endDate) {
         StringBuilder baseSql;
         StringBuilder additionalSql = new StringBuilder(" ");
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -89,23 +82,6 @@ public class PostgresIOTDataAccessService implements IOTDao {
         } else {
             return null;
         }
-    }
-
-    @Override
-    public Double getValue(String query) {
-//        if (query.equalsIgnoreCase("AVG")) {
-//            return executeQuery("SELECT AVG(value) as value FROM IOT_Message ", "value");
-//        } else if (query.equalsIgnoreCase("SUM")) {
-//            return executeQuery("SELECT SUM(value) as value FROM IOT_Message ", "value");
-//        } else if (query.equalsIgnoreCase("MIN")) {
-//            return executeQuery("SELECT MIN(value) as value FROM IOT_Message ", "value");
-//        } else if (query.equalsIgnoreCase("MAX")) {
-//            return executeQuery("SELECT MAX(value) as value FROM IOT_Message ", "value");
-//        } else if (query.equalsIgnoreCase("MEDIAN")) {
-//            return executeQuery("select percentile_disc(0.5) within group (order by IOT_Message.value) as value from IOT_Message ", "value");
-//        }
-
-        return null;
     }
 
     private IOTMessageDTO executeQuery(String sql, String returnField) {

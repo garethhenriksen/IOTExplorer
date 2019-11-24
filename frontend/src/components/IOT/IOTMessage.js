@@ -3,6 +3,9 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import axios from "../../axios-football";
+import Card from "@material-ui/core/Card";
+import JSONPretty from "react-json-pretty";
+import CardContent from "@material-ui/core/CardContent";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -10,14 +13,37 @@ const useStyles = makeStyles(theme => ({
   },
   input: {
     display: "none"
+  },
+  card: {
+    minWidth: 275,
+    margin: "10px"
+  },
+  bullet: {
+    display: "inline-block",
+    margin: "0 2px",
+    transform: "scale(0.8)"
+  },
+  title: {
+    fontSize: 14
+  },
+  pos: {
+    marginBottom: 12
   }
 }));
 
 const IOTMessage = props => {
-  const { device, deviceTypeID, deviceID, groupID, valueMin, valueMax } = props;
+  const {
+    device,
+    deviceTypeID,
+    deviceID,
+    groupID,
+    valueMin,
+    valueMax,
+    url
+  } = props;
   const classes = useStyles();
 
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(null);
   const [clicked, setClicked] = useState(false);
   const [timerID, setTimerID] = useState(null);
 
@@ -37,24 +63,13 @@ const IOTMessage = props => {
           });
 
           axios
-            .post("/publish", data)
+            .post(url, data)
             .then(res => {
-              console.log("done");
-              setMessage("request sent [" + data + "]");
+              setMessage(data);
             })
             .catch(err => {
               console.log(err.message);
-              setMessage(err.message);
-            });
-            axios
-            .post("/publish/kafka", data)
-            .then(res => {
-              console.log("done");
-              setMessage("request sent [" + data + "]");
-            })
-            .catch(err => {
-              console.log(err.message);
-              setMessage(err.message);
+              setMessage(err);
             });
         }, 1000)
       );
@@ -62,6 +77,24 @@ const IOTMessage = props => {
       clearInterval(timerID);
     }
   };
+
+  let messageCard = null;
+  if (!clicked) {
+    messageCard = null;
+  } else if (message !== null) {
+    console.log(message);
+    messageCard = (
+      <Card className={classes.card}>
+        <CardContent>
+          <div>
+            Request Sent
+            <JSONPretty id="json-pretty" data={message}></JSONPretty>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <div>
       <Button
@@ -73,7 +106,7 @@ const IOTMessage = props => {
         {!clicked ? "Start sending " : "Stop sending "}
         {device}
       </Button>
-      {message}
+      {messageCard}
     </div>
   );
 };

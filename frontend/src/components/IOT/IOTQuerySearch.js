@@ -4,7 +4,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
-import Grid from "@material-ui/core/Grid";
 import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
@@ -148,59 +147,58 @@ const IOTQuerySearch = props => {
             </MenuItem>
           ))}
         </TextField>
+        <br />
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <KeyboardDatePicker
+            disableToolbar
+            variant="inline"
+            format="yyyy-MM-dd"
+            margin="normal"
+            id="date-picker-inline"
+            label="Start Date"
+            value={selectedStartDate}
+            onChange={handleStartDateChange}
+            KeyboardButtonProps={{
+              "aria-label": "change date"
+            }}
+          />
+          <KeyboardTimePicker
+            margin="normal"
+            id="time-picker"
+            label="Start Time"
+            value={selectedStartDate}
+            onChange={handleStartDateChange}
+            KeyboardButtonProps={{
+              "aria-label": "change time"
+            }}
+          />
+        </MuiPickersUtilsProvider>
 
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
-              disableToolbar
-              variant="inline"
-              format="yyyy-MM-dd"
-              margin="normal"
-              id="date-picker-inline"
-              label="Start Date"
-              value={selectedStartDate}
-              onChange={handleStartDateChange}
-              KeyboardButtonProps={{
-                "aria-label": "change date"
-              }}
-            />
-            <KeyboardTimePicker
-              margin="normal"
-              id="time-picker"
-              label="Start Time"
-              value={selectedStartDate}
-              onChange={handleStartDateChange}
-              KeyboardButtonProps={{
-                "aria-label": "change time"
-              }}
-            />
-          </MuiPickersUtilsProvider>
-
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
-              disableToolbar
-              variant="inline"
-              format="yyyy-MM-dd"
-              margin="normal"
-              id="date-picker-inline"
-              label="End Date"
-              value={selectedEndDate}
-              onChange={handleEndDateChange}
-              KeyboardButtonProps={{
-                "aria-label": "change date"
-              }}
-            />
-            <KeyboardTimePicker
-              margin="normal"
-              id="time-picker"
-              label="End Time"
-              value={selectedEndDate}
-              onChange={handleEndDateChange}
-              KeyboardButtonProps={{
-                "aria-label": "change time"
-              }}
-            />
-          </MuiPickersUtilsProvider>
-
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <KeyboardDatePicker
+            disableToolbar
+            variant="inline"
+            format="yyyy-MM-dd"
+            margin="normal"
+            id="date-picker-inline"
+            label="End Date"
+            value={selectedEndDate}
+            onChange={handleEndDateChange}
+            KeyboardButtonProps={{
+              "aria-label": "change date"
+            }}
+          />
+          <KeyboardTimePicker
+            margin="normal"
+            id="time-picker"
+            label="End Time"
+            value={selectedEndDate}
+            onChange={handleEndDateChange}
+            KeyboardButtonProps={{
+              "aria-label": "change time"
+            }}
+          />
+        </MuiPickersUtilsProvider>
       </form>
       <Button
         variant="contained"
