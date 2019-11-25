@@ -1,6 +1,6 @@
 package com.garethhenriksen.IOT.controller;
 
-import com.garethhenriksen.IOT.model.IOTMessage;
+import com.garethhenriksen.IOT.model.BusPositionsDTO;
 import com.garethhenriksen.IOT.model.IOTMessageDTO;
 import com.garethhenriksen.IOT.service.IOTService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.jms.Queue;
 import java.net.URLDecoder;
 import java.util.Date;
+
 
 @Slf4j
 @RestController
@@ -76,7 +77,6 @@ public class IOTController {
     @PostMapping(value = "/publish/activemq")
     public String publishJMSMessage(@RequestBody(required = false) final String message) {
         try {
-            log.info("message" + URLDecoder.decode(message, "UTF-8"));
             jmsTemplate.convertAndSend(queue, URLDecoder.decode(message, "UTF-8"));
         } catch (Exception e) {
             log.error("Exception while attempting to publish[" + message + "]", e);
@@ -96,5 +96,11 @@ public class IOTController {
                                      @RequestParam(name = "endDate", required = false)
                                      @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endDate) {
         return iotService.getMessagesWithParameters(deviceTypeId, deviceId, groupId, query, startDate, endDate);
+    }
+
+    @CrossOrigin(origins = {"http://localhost:3000"})
+    @GetMapping(value = "/bus")
+    public BusPositionsDTO getBusPositions() {
+        return iotService.getBusPosition();
     }
 }

@@ -13,6 +13,7 @@ import axios from "../axios-football";
 import moment from "moment";
 import IOTQueryResults from "../components/IOT/IOTQueryResults";
 import IOTCustomMessage from "../components/IOT/IOTCustomMessage";
+import BusPositionMap from "./BusPositionMap";
 
 const useStyles = makeStyles({
   heading: {
@@ -164,7 +165,9 @@ function IOT() {
           Add a custom message
         </Typography>
       </div>
-      <IOTCustomMessage />
+      <IOTCustomMessage url={kafkaUrl}/>
+      <Divider variant="middle" />
+      {/* <div><BusPositionMap /></div> */}
     </div>
   );
 }

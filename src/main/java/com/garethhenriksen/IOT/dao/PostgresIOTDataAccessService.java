@@ -1,7 +1,7 @@
 package com.garethhenriksen.IOT.dao;
 
-import com.garethhenriksen.IOT.model.IOTMessage;
-import com.garethhenriksen.IOT.model.IOTMessageDTO;
+import com.garethhenriksen.IOT.model.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Repository("postgres")
 public class PostgresIOTDataAccessService implements IOTDao {
 
@@ -82,6 +83,38 @@ public class PostgresIOTDataAccessService implements IOTDao {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public void insertBusPosition(BusPosition busPosition) {
+        // timestamp needs to be converted to date
+        final String sql = "INSERT INTO IOT_BusPosition(busId, milesPerHour, latitude, longitude, timestamp) VALUES(?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, busPosition.getId(), busPosition.getMilesPerHour(),
+                busPosition.getLocation().getLatitude(), busPosition.getLocation().getLongitude(),
+                new Date(busPosition.getTimestamp() * 1000));
+    }
+
+    @Override
+    public BusPositionsDTO getBusLatestPositions() {
+        BusPositionsDTO dto = new BusPositionsDTO();
+        final String sql = "SELECT busId, latitude, longitude, timestamp, milesPerHour\n" +
+                "    from ( select busId, latitude, longitude, timestamp, milesPerHour, row_number() over(partition by busId order by timestamp desc) as rn\n" +
+                "           from\n" +
+                "           IOT_BusPosition\n" +
+                "         ) t\n" +
+                "        where t.rn = 1";
+        List<BusPosition> listOfBusPosition = new ArrayList<>();
+        listOfBusPosition.addAll(jdbcTemplate.query(sql, (resultSet, i) -> {
+            String busId = resultSet.getString("busId");
+            Double latitude = resultSet.getDouble("latitude");
+            Double longitude = resultSet.getDouble("longitude");
+            Double milesPerHour = resultSet.getDouble("milesPerHour");
+            Date timestamp = resultSet.getTimestamp("timestamp");
+
+            return new BusPosition(busId, timestamp.getTime(), new Location(latitude, longitude), milesPerHour);
+        }));
+        dto.setBusPositionList(listOfBusPosition);
+        return dto;
     }
 
     private IOTMessageDTO executeQuery(String sql, String returnField) {

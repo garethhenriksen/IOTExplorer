@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   root: {
     "& > *": {
       margin: theme.spacing(1),
-      width: 200
+      width: 150
     }
   },
   textField: {
@@ -95,14 +95,18 @@ const IOTQuerySearch = props => {
   };
 
   const onClicked = () => {
-    onSearchClicked(
-      state.deviceTypeId,
-      state.deviceId,
-      state.groupId,
-      state.queryType,
-      selectedStartDate,
-      selectedEndDate
-    );
+    if (isNaN(state.deviceTypeId) || isNaN(state.deviceId) || isNaN(state.groupId)) {
+      alert("please enter numeric value for deviceId, deviceTypeId and groupId");
+    } else {
+      onSearchClicked(
+        state.deviceTypeId,
+        state.deviceId,
+        state.groupId,
+        state.queryType,
+        selectedStartDate,
+        selectedEndDate
+      );
+    }
   };
 
   return (

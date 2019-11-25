@@ -1,6 +1,7 @@
 package com.garethhenriksen.IOT.message;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.garethhenriksen.IOT.model.BusPosition;
 import com.garethhenriksen.IOT.model.IOTMessage;
 import com.garethhenriksen.IOT.service.IOTService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,19 +15,13 @@ public class MessageProcessor {
     @Autowired
     private IOTService iotService;
 
-
-    public MessageProcessor() {
-
-    }
-
-
+    /**
+     * @param message
+     */
     public void processMessage(String message) {
         // get json
         // analyse to certain type
         // save in db
-        System.out.println("processMessage: " + message);
-        log.info("processMessage: " + message);
-
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             IOTMessage iotMessage = objectMapper.readValue(message, IOTMessage.class);
@@ -36,7 +31,18 @@ public class MessageProcessor {
         } catch (Exception e) {
             log.error("error: " + message, e);
         }
+    }
 
+    /**
+     *
+     * @param message
+     */
+    public void processBusPosition(BusPosition message) {
+        try {
+            iotService.updateBusPosition(message);
+        } catch (Exception e) {
+            log.error("error: " + message, e);
+        }
     }
 }
 
