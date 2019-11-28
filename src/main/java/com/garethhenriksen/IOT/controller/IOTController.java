@@ -1,16 +1,16 @@
 package com.garethhenriksen.IOT.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.garethhenriksen.IOT.model.BusPositionsDTO;
+import com.garethhenriksen.IOT.model.IOTMessage;
 import com.garethhenriksen.IOT.model.IOTMessageDTO;
 import com.garethhenriksen.IOT.service.IOTService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +28,7 @@ public class IOTController {
     private final IOTService iotService;
 
     @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private KafkaTemplate<String, IOTMessage> kafkaTemplate;
 
     @Autowired
     private JmsTemplate jmsTemplate;
@@ -49,23 +49,9 @@ public class IOTController {
         try {
             log.info("message" + URLDecoder.decode(message, "UTF-8"));
             final String decodedMessage = URLDecoder.decode(message, "UTF-8");
-            ListenableFuture<SendResult<String, String>> future =
-                    kafkaTemplate.send(TOPIC, decodedMessage);
-
-            future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
-
-                @Override
-                public void onSuccess(SendResult<String, String> result) {
-                    System.out.println("Sent message=[" + decodedMessage +
-                            "] with offset=[" + result.getRecordMetadata().offset() + "]");
-                }
-
-                @Override
-                public void onFailure(Throwable ex) {
-                    System.out.println("Unable to send message=["
-                            + decodedMessage + "] due to : " + ex.getMessage());
-                }
-            });
+            ObjectMapper mapper = new ObjectMapper();
+            IOTMessage obj = mapper.readValue(decodedMessage, IOTMessage.class);
+            kafkaTemplate.send(new ProducerRecord<>(TOPIC, obj.getDeviceTypeId() + "_" + obj.getDeviceId(), obj));
         } catch (Exception e) {
             log.error("Exception while attempting to publish[" + message + "]", e);
             return "Publish Unsuccessfully";
@@ -75,7 +61,7 @@ public class IOTController {
 
     @CrossOrigin(origins = {"http://localhost:3000"})
     @PostMapping(value = "/publish/activemq")
-    public String publishJMSMessage(@RequestBody(required = false) final String message) {
+    public String publishJMSMessage(@RequestBody(required = true) final String message) {
         try {
             jmsTemplate.convertAndSend(queue, URLDecoder.decode(message, "UTF-8"));
         } catch (Exception e) {

@@ -18,23 +18,22 @@ public class MessageProcessor {
     /**
      * @param message
      */
+    public void processMessage(IOTMessage message) {
+        iotService.addMessage(message);
+    }
+
     public void processMessage(String message) {
-        // get json
-        // analyse to certain type
-        // save in db
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             IOTMessage iotMessage = objectMapper.readValue(message, IOTMessage.class);
-            log.info("iotMessage: " + iotMessage.toString());
 
-            iotService.addMessage(iotMessage);
+            processMessage(iotMessage);
         } catch (Exception e) {
             log.error("error: " + message, e);
         }
     }
 
     /**
-     *
      * @param message
      */
     public void processBusPosition(BusPosition message) {

@@ -3,6 +3,7 @@ package com.garethhenriksen.IOT.listener;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.garethhenriksen.IOT.message.MessageProcessor;
 import com.garethhenriksen.IOT.model.BusPosition;
+import com.garethhenriksen.IOT.model.IOTMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -16,7 +17,7 @@ public class KafkaConsumer {
     private MessageProcessor mp;
 
     @KafkaListener(topics = "iot_message")
-    public void listen(String message) {
+    public void listen(IOTMessage message) {
         mp.processMessage(message);
     }
 
