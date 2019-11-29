@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import L from "leaflet";
-import axios from "../axios-football";
+import axios from "../axios-iot";
 
 const style = {
   height: "75vh"

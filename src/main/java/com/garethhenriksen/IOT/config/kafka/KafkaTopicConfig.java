@@ -27,9 +27,4 @@ public class KafkaTopicConfig {
     public NewTopic topic2() {
         return new NewTopic("rtd-bus-position-enriched", 1, (short) 1);
     }
-
-    @Bean
-    public NewTopic topic3() {
-        return new NewTopic("iot_message_enriched", 1, (short) 1);
-    }
 }

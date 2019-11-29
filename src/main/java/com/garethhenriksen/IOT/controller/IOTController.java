@@ -9,12 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.jms.Queue;
 import java.net.URLDecoder;
 import java.util.Date;
 
@@ -29,12 +27,6 @@ public class IOTController {
 
     @Autowired
     private KafkaTemplate<String, IOTMessage> kafkaTemplate;
-
-    @Autowired
-    private JmsTemplate jmsTemplate;
-
-    @Autowired
-    private Queue queue;
 
     private static final String TOPIC = "iot_message";
 
@@ -51,19 +43,7 @@ public class IOTController {
             final String decodedMessage = URLDecoder.decode(message, "UTF-8");
             ObjectMapper mapper = new ObjectMapper();
             IOTMessage obj = mapper.readValue(decodedMessage, IOTMessage.class);
-            kafkaTemplate.send(new ProducerRecord<>(TOPIC, obj.getDeviceTypeId() + "_" + obj.getDeviceId(), obj));
-        } catch (Exception e) {
-            log.error("Exception while attempting to publish[" + message + "]", e);
-            return "Publish Unsuccessfully";
-        }
-        return "Published Successfully";
-    }
-
-    @CrossOrigin(origins = {"http://localhost:3000"})
-    @PostMapping(value = "/publish/activemq")
-    public String publishJMSMessage(@RequestBody(required = true) final String message) {
-        try {
-            jmsTemplate.convertAndSend(queue, URLDecoder.decode(message, "UTF-8"));
+            kafkaTemplate.send(new ProducerRecord<>(TOPIC, obj.getDeviceTypeId() + "_" + obj.getDeviceId() + "_" + obj.getGroupId(), obj));
         } catch (Exception e) {
             log.error("Exception while attempting to publish[" + message + "]", e);
             return "Publish Unsuccessfully";
