@@ -72,7 +72,7 @@ const IOTQueryResults = props => {
                   <TableCell align="right">{row.deviceTypeId}</TableCell>
                   <TableCell align="right">{row.groupId}</TableCell>
                   <TableCell align="right">{row.value}</TableCell>
-                  <TableCell align="right">{row.timestamp !== null ? moment(row.timestamp).format("YYYY-MM-DD hh:mm") : ""}</TableCell>
+                  <TableCell align="right">{row.timestamp !== null ? moment(row.timestamp).format("YYYY-MM-DD HH:mm") : ""}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

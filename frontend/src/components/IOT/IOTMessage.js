@@ -57,7 +57,7 @@ const IOTMessage = props => {
             deviceTypeId: deviceTypeID,
             deviceId: deviceID,
             value:
-              Math.floor(Math.random() * (valueMax - valueMin + 1)) + valueMin,
+              (Math.random() * (valueMax - valueMin + 1) + valueMin).toFixed(2),
             groupId: groupID,
             timestamp: new Date()
           });

@@ -18,10 +18,6 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     height: "100vh",
     overflow: "auto"
-    // ,
-    // backgroundImage: `url(${BackgroundImage})`,
-    // backgroundSize: 'cover',
-    // backgroundPosition: 'top'
   },
   container: {
     paddingTop: theme.spacing(4),
@@ -85,7 +81,8 @@ const Layout = props => {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
-          <Paper className={fixedHeightPaper}>{props.children}</Paper>
+        {props.children}
+          {/* <Paper className={fixedHeightPaper}></Paper> */}
         </Container>
 
         <Copyright />

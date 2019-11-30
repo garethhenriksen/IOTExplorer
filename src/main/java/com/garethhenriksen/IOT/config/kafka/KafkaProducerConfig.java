@@ -1,6 +1,5 @@
 package com.garethhenriksen.IOT.config.kafka;
 
-import com.garethhenriksen.IOT.model.BusPosition;
 import com.garethhenriksen.IOT.model.IOTMessage;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -29,19 +28,5 @@ public class KafkaProducerConfig {
     @Bean
     public KafkaTemplate<String, IOTMessage> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
-    }
-
-    @Bean
-    public ProducerFactory<String, BusPosition> rtdProducerFactory() {
-        Map<String, Object> configProps = new HashMap<>();
-        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
-        configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        return new DefaultKafkaProducerFactory<>(configProps);
-    }
-
-    @Bean
-    public KafkaTemplate<String, BusPosition> rtdKafkaTemplate() {
-        return new KafkaTemplate<>(rtdProducerFactory());
     }
 }

@@ -1,8 +1,6 @@
 package com.garethhenriksen.IOT.listener;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.garethhenriksen.IOT.message.MessageProcessor;
-import com.garethhenriksen.IOT.model.BusPosition;
 import com.garethhenriksen.IOT.model.IOTMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +17,5 @@ public class KafkaConsumer {
     @KafkaListener(topics = "iot_message")
     public void listen(IOTMessage message) {
         mp.processMessage(message);
-    }
-
-    @KafkaListener(topics = "rtd-bus-position-enriched", groupId = "my-group3")
-    public void listenToRTDEnriched(String message) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            BusPosition busPosition = objectMapper.readValue(message, BusPosition.class);
-            mp.processBusPosition(busPosition);
-        } catch (Exception e) {
-            log.error("Exception while listening to RTDEnriched: " + message, e);
-        }
     }
 }

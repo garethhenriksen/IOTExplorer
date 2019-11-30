@@ -2,7 +2,6 @@ package com.garethhenriksen.IOT.rest;
 
 import com.garethhenriksen.IOT.controller.IOTController;
 import com.garethhenriksen.IOT.dao.PostgresIOTDataAccessService;
-import com.garethhenriksen.IOT.model.BusPositionsDTO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -33,10 +32,5 @@ public class RestControllerTest {
     @Test
     public void contextLoads() throws Exception {
         assertThat(controller).isNotNull();
-    }
-
-    @Test
-    public void getBusPositionsTestSimple() throws Exception {
-        assertThat(this.controller.getBusPositions().equals(BusPositionsDTO.class));
     }
 }

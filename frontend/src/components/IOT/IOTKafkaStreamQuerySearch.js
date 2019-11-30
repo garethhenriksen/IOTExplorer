@@ -36,16 +36,8 @@ const useStyles = makeStyles(theme => ({
 
 const queryTypes = [
   {
-    value: "undefined",
-    label: "No Selection"
-  },
-  {
     value: "AVG",
     label: "AVG"
-  },
-  {
-    value: "SUM",
-    label: "SUM"
   },
   {
     value: "MIN",
@@ -54,22 +46,12 @@ const queryTypes = [
   {
     value: "MAX",
     label: "MAX"
-  },
-  {
-    value: "MEDIAN",
-    label: "MEDIAN"
   }
 ];
 
 const IOTQuerySearch = props => {
   const { onSearchClicked } = props;
   const classes = useStyles();
-  const [selectedStartDate, setSelectedStartDate] = useState(
-    new Date().setMinutes(new Date().getMinutes() - 10)
-  );
-  const [selectedEndDate, setSelectedEndDate] = useState(
-    new Date().setMinutes(new Date().getMinutes() + 10)
-  );
 
   const [state, setState] = useState({
     deviceId: null,
@@ -86,25 +68,23 @@ const IOTQuerySearch = props => {
     });
   };
 
-  const handleStartDateChange = date => {
-    setSelectedStartDate(date);
-  };
-
-  const handleEndDateChange = date => {
-    setSelectedEndDate(date);
-  };
-
   const onClicked = () => {
-    if (isNaN(state.deviceTypeId) || isNaN(state.deviceId) || isNaN(state.groupId)) {
-      alert("please enter numeric value for deviceId, deviceTypeId and groupId");
+    if (state.queryType == null) {
+      alert("please enter query type");
+    } else if (
+      isNaN(state.deviceTypeId) ||
+      isNaN(state.deviceId) ||
+      isNaN(state.groupId)
+    ) {
+      alert(
+        "please enter numeric value for deviceId, deviceTypeId and groupId"
+      );
     } else {
       onSearchClicked(
         state.deviceTypeId,
         state.deviceId,
         state.groupId,
-        state.queryType,
-        selectedStartDate,
-        selectedEndDate
+        state.queryType
       );
     }
   };
@@ -152,57 +132,6 @@ const IOTQuerySearch = props => {
           ))}
         </TextField>
         <br />
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <KeyboardDatePicker
-            disableToolbar
-            variant="inline"
-            format="yyyy-MM-dd"
-            margin="normal"
-            id="date-picker-inline"
-            label="Start Date"
-            value={selectedStartDate}
-            onChange={handleStartDateChange}
-            KeyboardButtonProps={{
-              "aria-label": "change date"
-            }}
-          />
-          <KeyboardTimePicker
-            margin="normal"
-            id="time-picker"
-            label="Start Time"
-            value={selectedStartDate}
-            onChange={handleStartDateChange}
-            KeyboardButtonProps={{
-              "aria-label": "change time"
-            }}
-          />
-        </MuiPickersUtilsProvider>
-
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <KeyboardDatePicker
-            disableToolbar
-            variant="inline"
-            format="yyyy-MM-dd"
-            margin="normal"
-            id="date-picker-inline"
-            label="End Date"
-            value={selectedEndDate}
-            onChange={handleEndDateChange}
-            KeyboardButtonProps={{
-              "aria-label": "change date"
-            }}
-          />
-          <KeyboardTimePicker
-            margin="normal"
-            id="time-picker"
-            label="End Time"
-            value={selectedEndDate}
-            onChange={handleEndDateChange}
-            KeyboardButtonProps={{
-              "aria-label": "change time"
-            }}
-          />
-        </MuiPickersUtilsProvider>
       </form>
       <Button
         variant="contained"

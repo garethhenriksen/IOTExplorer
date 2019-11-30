@@ -1,7 +1,5 @@
 package com.garethhenriksen.IOT.dao;
 
-import com.garethhenriksen.IOT.model.BusPosition;
-import com.garethhenriksen.IOT.model.BusPositionsDTO;
 import com.garethhenriksen.IOT.model.IOTMessage;
 import com.garethhenriksen.IOT.model.IOTMessageDTO;
 
@@ -18,8 +16,4 @@ public interface IOTDao {
 
     IOTMessageDTO getMessages(Integer deviceTypeId, Integer deviceId, Integer groupId, String query,
                               Date startDate, Date endDate);
-
-    void insertBusPosition(BusPosition busPosition);
-
-    BusPositionsDTO getBusLatestPositions();
 }

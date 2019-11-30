@@ -79,8 +79,8 @@ const IOTCustomMessage = props => {
               deviceTypeId: state.deviceTypeId,
               deviceId: state.deviceId,
               value:
-                Math.floor(Math.random() * (range[1] - range[0] + 1)) +
-                range[0],
+                (Math.random() * (range[1] - range[0] + 1) +
+                range[0]).toFixed(2),
               groupId: state.groupId,
               timestamp: new Date()
             });
