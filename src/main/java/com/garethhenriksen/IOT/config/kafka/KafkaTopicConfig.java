@@ -22,4 +22,9 @@ public class KafkaTopicConfig {
     public NewTopic topic1() {
         return new NewTopic("iot_message", 1, (short) 1);
     }
+
+    @Bean
+    public NewTopic enrichedIOTMessage() {
+        return new NewTopic("iot_message_difference", 1, (short) 1);
+    }
 }

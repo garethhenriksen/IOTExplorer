@@ -74,7 +74,6 @@ const IOTCustomMessage = props => {
       if (!clicked) {
         setTimerID(
           setInterval(() => {
-              console.log("object")
             const data = JSON.stringify({
               deviceTypeId: state.deviceTypeId,
               deviceId: state.deviceId,

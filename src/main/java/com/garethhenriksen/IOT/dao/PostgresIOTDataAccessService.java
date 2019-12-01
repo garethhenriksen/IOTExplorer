@@ -26,8 +26,8 @@ public class PostgresIOTDataAccessService implements IOTDao {
 
     @Override
     public int insertMessage(UUID id, IOTMessage message) {
-        final String sql = "INSERT INTO IOT_Message(deviceId, deviceTypeId, groupId, value, timestamp) VALUES(?, ?, ?, ?, ?)";
-        return jdbcTemplate.update(sql, message.getDeviceId(), message.getDeviceTypeId(), message.getGroupId(), message.getValue(), message.getTimestamp());
+        final String sql = "INSERT INTO IOT_Message(deviceId, deviceTypeId, groupId, value, timestamp, difference) VALUES(?, ?, ?, ?, ?, ?)";
+        return jdbcTemplate.update(sql, message.getDeviceId(), message.getDeviceTypeId(), message.getGroupId(), message.getValue(), message.getTimestamp(), message.getDifference());
     }
 
     @Override
@@ -62,7 +62,7 @@ public class PostgresIOTDataAccessService implements IOTDao {
         }
 
         if (query == null) {
-            baseSql = new StringBuilder("SELECT deviceId, deviceTypeId, groupId, value, timestamp FROM IOT_Message WHERE 1 = 1");
+            baseSql = new StringBuilder("SELECT deviceId, deviceTypeId, groupId, value, timestamp, difference FROM IOT_Message WHERE 1 = 1");
 
             return executeQuery(baseSql.append(additionalSql).toString());
         } else if (query.equalsIgnoreCase("AVG")) {
@@ -104,8 +104,9 @@ public class PostgresIOTDataAccessService implements IOTDao {
             Integer groupId = resultSet.getInt("groupId");
             Double value = resultSet.getDouble("value");
             Date timestamp = resultSet.getTimestamp("timestamp");
+            Double difference = resultSet.getDouble("difference");
 
-            return new IOTMessage(deviceId, deviceTypeId, groupId, value, timestamp);
+            return new IOTMessage(deviceId, deviceTypeId, groupId, value, timestamp, difference);
         }));
         dto.setMessages(listOfMessages);
         return dto;

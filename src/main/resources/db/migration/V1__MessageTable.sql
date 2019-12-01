@@ -7,5 +7,6 @@ CREATE TABLE IOT_Message (
     groupId BIGINT NULL,
     value NUMERIC (5, 2) NULL,
     timestamp TIMESTAMP NULL,
+    difference NUMERIC (5, 2) NULL,
     CONSTRAINT iotmessage_pk PRIMARY KEY (id)
 )

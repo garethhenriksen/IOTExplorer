@@ -1,6 +1,5 @@
 package com.garethhenriksen.IOT.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.garethhenriksen.IOT.model.IOTMessage;
 import com.garethhenriksen.IOT.model.IOTMessageDTO;
@@ -29,9 +28,6 @@ public class IOTController {
     private KafkaTemplate<String, IOTMessage> kafkaTemplate;
 
     private static final String TOPIC = "iot_message";
-
-    @Autowired
-    KafkaStreamController kafkaStreamController;
 
     @Autowired
     public IOTController(IOTService iotService) {
@@ -68,23 +64,5 @@ public class IOTController {
                                      @RequestParam(name = "endDate", required = false)
                                      @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endDate) {
         return iotService.getMessagesWithParameters(deviceTypeId, deviceId, groupId, query, startDate, endDate);
-    }
-
-    @CrossOrigin(origins = {"http://localhost:3000"})
-    @GetMapping(value = "/messages/kafka")
-    @ApiOperation(value = "Endpoint for getting messages from kafka streams",
-            produces = "Application/JSON", response = IOTMessageDTO.class, httpMethod = "GET")
-    public IOTMessageDTO getMessagesFromKafka(@RequestParam(name = "deviceTypeId", required = false) Integer deviceTypeId,
-                                              @RequestParam(name = "deviceId", required = false) Integer deviceId,
-                                              @RequestParam(name = "groupId", required = false) Integer groupId,
-                                              @RequestParam(name = "query", required = true) String query,
-                                              @RequestParam(name = "startDate", required = false)
-                                              @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date startDate,
-                                              @RequestParam(name = "endDate", required = false)
-                                              @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date endDate) throws JsonProcessingException {
-        if (query.equalsIgnoreCase("AVG") || query.equalsIgnoreCase("MIN") || query.equalsIgnoreCase("MAX")) {
-            return kafkaStreamController.getValue(deviceTypeId, deviceId, groupId, query);
-        }
-        return null;
     }
 }

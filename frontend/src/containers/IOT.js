@@ -4,7 +4,6 @@ import Grid from "@material-ui/core/Grid";
 
 import IOTMessage from "../components/IOT/IOTMessage";
 import IOTQuerySearch from "../components/IOT/IOTQuerySearch";
-import Divider from "@material-ui/core/Divider";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -14,9 +13,7 @@ import clsx from "clsx";
 import axios from "../axios-iot";
 import moment from "moment";
 import IOTQueryResults from "../components/IOT/IOTQueryResults";
-import IOTKafkaStreamQuerySearch from "../components/IOT/IOTKafkaStreamQuerySearch";
 import IOTCustomMessage from "../components/IOT/IOTCustomMessage";
-import BusPositionMap from "./BusPositionMap";
 
 const useStyles = makeStyles(theme => ({
   heading: {
@@ -42,43 +39,10 @@ const useStyles = makeStyles(theme => ({
 function IOT() {
   const [queryResults, setQueryResults] = useState(null);
   const [searchClicked, setSearchClicked] = useState(false);
-  const [kafkaStreamQueryResults, setKafkaStreamQueryResults] = useState(null);
-  const [kafkaStreamSearchClicked, setKafkaStreamSearchClicked] = useState(
-    false
-  );
 
   const kafkaUrl = "publish/kafka";
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
-  const onKafkaStreamSearchClickedHandler = (
-    deviceTypeId,
-    deviceId,
-    groupId,
-    queryType
-  ) => {
-    setKafkaStreamSearchClicked(true);
-
-    axios
-      .get("/messages/kafka/", {
-        params: {
-          deviceTypeId: deviceTypeId,
-          deviceId: deviceId,
-          groupId: groupId,
-          query: queryType !== "undefined" ? queryType : "AVG"
-        }
-      })
-      .then(res => {
-        setKafkaStreamSearchClicked(false);
-        if (res.data) {
-          setKafkaStreamQueryResults(res.data);
-        }
-      })
-      .catch(err => {
-        setKafkaStreamSearchClicked(false);
-        alert(err.message);
-      });
-  };
 
   const onSearchClickedHandler = (
     deviceTypeId,
@@ -116,13 +80,6 @@ function IOT() {
   let queryResultsComponent = null;
   if (queryResults !== null) {
     queryResultsComponent = <IOTQueryResults queryResults={queryResults} />;
-  }
-
-  let kafkaQueryResultsComponent = null;
-  if (kafkaStreamQueryResults !== null) {
-    kafkaQueryResultsComponent = (
-      <IOTQueryResults queryResults={kafkaStreamQueryResults} />
-    );
   }
 
   return (
@@ -184,28 +141,11 @@ function IOT() {
       <Paper className={fixedHeightPaper}> 
       <div className={classes.heading}>
         <Typography variant="h6" gutterBottom>
-          Search using Kafka Streams
-        </Typography>
-      </div>
-      <IOTKafkaStreamQuerySearch
-        onSearchClicked={onKafkaStreamSearchClickedHandler}
-      />
-      {kafkaStreamSearchClicked ? (
-        <CircularProgress />
-      ) : (
-        kafkaQueryResultsComponent
-      )}
-      </Paper>
-
-      <Paper className={fixedHeightPaper}> 
-      <div className={classes.heading}>
-        <Typography variant="h6" gutterBottom>
           Add a custom message
         </Typography>
       </div>
       <IOTCustomMessage url={kafkaUrl} />
       </Paper>
-      {/* <div><BusPositionMap /></div> */}
     </div>
   );
 }

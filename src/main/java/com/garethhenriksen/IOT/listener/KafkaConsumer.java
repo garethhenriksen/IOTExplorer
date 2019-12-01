@@ -14,7 +14,7 @@ public class KafkaConsumer {
     @Autowired
     private MessageProcessor mp;
 
-    @KafkaListener(topics = "iot_message")
+    @KafkaListener(topics = "iot_message_difference")
     public void listen(IOTMessage message) {
         mp.processMessage(message);
     }

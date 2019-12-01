@@ -57,6 +57,7 @@ const IOTQueryResults = props => {
                 <TableCell align="right">deviceTypeId</TableCell>
                 <TableCell align="right">groupId</TableCell>
                 <TableCell align="right">value</TableCell>
+                <TableCell align="right">difference</TableCell>
                 <TableCell align="right">timestamp</TableCell>
               </TableRow>
             </TableHead>
@@ -72,6 +73,7 @@ const IOTQueryResults = props => {
                   <TableCell align="right">{row.deviceTypeId}</TableCell>
                   <TableCell align="right">{row.groupId}</TableCell>
                   <TableCell align="right">{row.value}</TableCell>
+                  <TableCell align="right">{row.difference}</TableCell>
                   <TableCell align="right">{row.timestamp !== null ? moment(row.timestamp).format("YYYY-MM-DD HH:mm") : ""}</TableCell>
                 </TableRow>
               ))}

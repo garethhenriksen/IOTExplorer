@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 const queryTypes = [
   {
     value: "undefined",
-    label: "No Selection"
+    label: "List Results"
   },
   {
     value: "AVG",
